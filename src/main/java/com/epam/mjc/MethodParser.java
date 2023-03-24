@@ -1,5 +1,9 @@
 package com.epam.mjc;
 
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+import java.util.List;
+
 public class MethodParser {
 
     /**
@@ -20,6 +24,27 @@ public class MethodParser {
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
     public MethodSignature parseFunction(String signatureString) {
-        throw new UnsupportedOperationException("You should implement this method.");
+//        throw new UnsupportedOperationException("You should implement this method.");
+
+        StringBuilder sourceArgument = new StringBuilder(signatureString);
+        StringBuilder leftPartOfMethod = new StringBuilder(sourceArgument.substring(0, sourceArgument.indexOf("(")));
+        StringBuilder rightPartOfMethod = new StringBuilder(sourceArgument.substring(sourceArgument.indexOf("(") + 1, sourceArgument.indexOf(")")));
+        StringTokenizer leftPartStatement = new StringTokenizer(leftPartOfMethod.toString(), " ");
+
+        StringTokenizer argumets = new StringTokenizer(rightPartOfMethod.toString(), ", ");
+        List<MethodSignature.Argument> listOfArguments = new ArrayList<>();
+        while (argumets.hasMoreTokens()){
+            listOfArguments.add(new MethodSignature.Argument(argumets.nextToken(), argumets.nextToken()));
+        }
+        MethodSignature result = new MethodSignature("", listOfArguments);
+
+        if(leftPartStatement.countTokens() > 2) {
+            result.setAccessModifier(leftPartStatement.nextToken());
+        }
+        result.setReturnType(leftPartStatement.nextToken());
+        result.setMethodName(leftPartStatement.nextToken());
+
+        System.out.print(rightPartOfMethod.toString());
+        return result;
     }
 }
